@@ -3,15 +3,22 @@ backend:
   phases:
     build:
       commands:
-        - export NODE_OPTIONS=--max-old-space-size=4096
+        - export NODE_OPTIONS=--max-old-space-size=2048
+        - export NEXT_DISABLE_SOURCEMAPS=true
+        - export NEXT_PRIVATE_DISABLE_AMP=true
+        - node -e "console.log('Memory usage:', process.memoryUsage())"
         - npm install -g pnpm@8.11.0
+        - pnpm prune
         - pnpm install
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     build:
       commands:
-        - export NODE_OPTIONS=--max-old-space-size=4096
+        - export NODE_OPTIONS=--max-old-space-size=2048
+        - export NEXT_DISABLE_SOURCEMAPS=true
+        - export NEXT_PRIVATE_DISABLE_AMP=true
+        - node -e "console.log('Memory usage:', process.memoryUsage())"
         - pnpm run build
   artifacts:
     baseDirectory: .next
