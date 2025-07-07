@@ -3,7 +3,7 @@ backend:
   phases:
     build:
       commands:
-        - export NODE_OPTIONS=--max-old-space-size=2048
+        - export NODE_OPTIONS=--max-old-space-size=7000
         - export NEXT_DISABLE_SOURCEMAPS=true
         - export NEXT_PRIVATE_DISABLE_AMP=true
         - node -e "console.log('Memory usage:', process.memoryUsage())"
