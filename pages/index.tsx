@@ -33,7 +33,7 @@ export default function App() {
     setUploading(true);
     setUploadMessage("");
     try {
-      await uploadData({ key: file.name, data: file }).result;
+      await uploadData({ path: file.name, data: file }).result;
       setUploadMessage("File uploaded successfully!");
       setFile(null);
     } catch (err) {
