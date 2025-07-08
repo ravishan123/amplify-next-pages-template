@@ -2,13 +2,39 @@ import { defineBackend } from "@aws-amplify/backend";
 import { Policy, PolicyStatement, Effect } from "aws-cdk-lib/aws-iam";
 import { auth } from "./auth/resource";
 import { data } from "./data/resource";
-import { storage } from "./storage/resource";
+import { storage, onUploadHandler } from "./storage/resource";
 
 const backend = defineBackend({
   auth,
   data,
   storage,
+  onUploadHandler,
 });
+
+// Grant DynamoDB permissions to the upload handler Lambda
+backend.onUploadHandler.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      "dynamodb:PutItem",
+      "dynamodb:GetItem",
+      "dynamodb:UpdateItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:Query",
+      "dynamodb:Scan",
+    ],
+    resources: [
+      backend.data.resources.tables["Document"].tableArn,
+      `${backend.data.resources.tables["Document"].tableArn}/index/*`,
+    ],
+  })
+);
+
+// Set environment variables for the Lambda function
+backend.onUploadHandler.addEnvironment(
+  "DOCUMENT_TABLE_NAME",
+  backend.data.resources.tables["Document"].tableName
+);
 
 // Create S3 policy for authenticated users
 const s3Policy = new Policy(

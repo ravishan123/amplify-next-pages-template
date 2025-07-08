@@ -9,7 +9,7 @@ const TABLE_NAME = process.env.DOCUMENT_TABLE_NAME || "Document";
 const ddbClient = new DynamoDBClient({ region: REGION });
 const docClient = DynamoDBDocumentClient.from(ddbClient);
 
-export const handler: Handler = async (event: S3Event) => {
+ const handler: Handler = async (event: S3Event) => {
   console.log("S3 event:", JSON.stringify(event, null, 2));
   for (const record of event.Records) {
     const s3Key = record.s3.object.key;
