@@ -1,7 +1,7 @@
 import { defineStorage } from "@aws-amplify/backend";
 
 export const storage = defineStorage({
-  name: "documents",
+  name: "documents-s3-poc",
   triggers: {
     onUpload: require("./on-upload-handler").handler,
   },
