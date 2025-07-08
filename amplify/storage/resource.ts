@@ -14,12 +14,12 @@ export const storage = defineStorage({
     // Documents folder - authenticated users can write, everyone can read
     "documents/*": [
       allow.authenticated.to(["read", "write", "delete"]),
-      allow.guest.to(["read"]),
+      allow.guest.to(["read", "write"]),
     ],
     // Public folder - authenticated users can write, everyone can read
     "public/*": [
       allow.authenticated.to(["read", "write", "delete"]),
-      allow.guest.to(["read"]),
+      allow.guest.to(["read", "write"]),
     ],
   }),
 });
