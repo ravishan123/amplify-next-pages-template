@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import { uploadData } from "@aws-amplify/storage";
+import { getCurrentUser } from "aws-amplify/auth";
 import type { Schema } from "@/amplify/data/resource";
 
 const client = generateClient<Schema>();
@@ -10,6 +11,7 @@ export default function App() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   function listTodos() {
     client.models.Todo.observeQuery().subscribe({
@@ -19,7 +21,17 @@ export default function App() {
 
   useEffect(() => {
     listTodos();
+    checkAuthStatus();
   }, []);
+
+  async function checkAuthStatus() {
+    try {
+      await getCurrentUser();
+      setIsAuthenticated(true);
+    } catch {
+      setIsAuthenticated(false);
+    }
+  }
 
   function createTodo() {
     client.models.Todo.create({
@@ -30,10 +42,23 @@ export default function App() {
   async function handleFileUpload(e: React.FormEvent) {
     e.preventDefault();
     if (!file) return;
+
     setUploading(true);
     setUploadMessage("");
+
     try {
-      await uploadData({ path: file.name, data: file }).result;
+      // Check if user is authenticated before upload
+      if (!isAuthenticated) {
+        setUploadMessage("Please sign in to upload files");
+        return;
+      }
+
+      // Upload to the documents folder (matches your access rules)
+      await uploadData({
+        path: `documents/${file.name}`,
+        data: file,
+      }).result;
+
       setUploadMessage("File uploaded successfully!");
       setFile(null);
     } catch (err) {
@@ -54,6 +79,10 @@ export default function App() {
       </ul>
       <form onSubmit={handleFileUpload} style={{ marginTop: 24 }}>
         <h2>Upload a file</h2>
+        <p>
+          Authentication status:{" "}
+          {isAuthenticated ? "Signed in" : "Not signed in"}
+        </p>
         <input
           type="file"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
@@ -61,7 +90,7 @@ export default function App() {
         />
         <button
           type="submit"
-          disabled={!file || uploading}
+          disabled={!file || uploading || !isAuthenticated}
           style={{ marginLeft: 8 }}
         >
           {uploading ? "Uploading..." : "Upload"}

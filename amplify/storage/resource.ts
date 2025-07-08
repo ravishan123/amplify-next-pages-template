@@ -11,12 +11,15 @@ export const storage = defineStorage({
     onUpload: onUploadHandler,
   },
   access: (allow) => ({
-    // Only authenticated users can write, everyone can read
+    // Documents folder - authenticated users can write, everyone can read
     "documents/*": [
       allow.authenticated.to(["read", "write"]),
       allow.guest.to(["read"]),
     ],
-    // Allow authenticated users to upload to root level as well
-    "*": [allow.authenticated.to(["read", "write"])],
+    // Public folder - authenticated users can write, everyone can read
+    "public/*": [
+      allow.authenticated.to(["read", "write"]),
+      allow.guest.to(["read"]),
+    ],
   }),
 });
