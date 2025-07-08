@@ -3,6 +3,7 @@ import { defineFunction } from "@aws-amplify/backend";
 
 export const onUploadHandler = defineFunction({
   entry: "./on-upload-handler.ts",
+  timeoutSeconds: 60,
 });
 
 export const storage = defineStorage({

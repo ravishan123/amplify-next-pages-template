@@ -1,5 +1,5 @@
 // on-upload-handler.ts
-import type { S3Event, Handler } from "aws-lambda";
+import type { S3Event } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
@@ -9,23 +9,38 @@ const TABLE_NAME = process.env.DOCUMENT_TABLE_NAME || "Document";
 const ddbClient = new DynamoDBClient({ region: REGION });
 const docClient = DynamoDBDocumentClient.from(ddbClient);
 
- const handler: Handler = async (event: S3Event) => {
+export const handler = async (event: S3Event) => {
   console.log("S3 event:", JSON.stringify(event, null, 2));
-  for (const record of event.Records) {
-    const s3Key = record.s3.object.key;
-    const uploadedAt = new Date().toISOString();
-    const id = s3Key;
 
-    await docClient.send(
-      new PutCommand({
-        TableName: TABLE_NAME,
-        Item: {
-          id,
-          s3Key,
-          uploadedAt,
-        },
-      })
-    );
+  try {
+    for (const record of event.Records) {
+      const s3Key = record.s3.object.key;
+      const uploadedAt = new Date().toISOString();
+      const id = s3Key;
+
+      console.log(`Processing file: ${s3Key}`);
+      console.log(`Table name: ${TABLE_NAME}`);
+
+      await docClient.send(
+        new PutCommand({
+          TableName: TABLE_NAME,
+          Item: {
+            id,
+            s3Key,
+            uploadedAt,
+          },
+        })
+      );
+
+      console.log(`Successfully processed: ${s3Key}`);
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ status: "success" }),
+    };
+  } catch (error) {
+    console.error("Error processing S3 event:", error);
+    throw error;
   }
-  return { status: "done" };
 };
