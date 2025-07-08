@@ -16,5 +16,7 @@ export const storage = defineStorage({
       allow.authenticated.to(["read", "write"]),
       allow.guest.to(["read"]),
     ],
+    // Allow authenticated users to upload to root level as well
+    "*": [allow.authenticated.to(["read", "write"])],
   }),
 });
