@@ -10,6 +10,7 @@ const ddbClient = new DynamoDBClient({ region: REGION });
 const docClient = DynamoDBDocumentClient.from(ddbClient);
 
 export const handler: Handler = async (event: S3Event) => {
+  console.log("S3 event:", JSON.stringify(event, null, 2));
   for (const record of event.Records) {
     const s3Key = record.s3.object.key;
     const uploadedAt = new Date().toISOString();
