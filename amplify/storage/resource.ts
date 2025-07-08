@@ -3,7 +3,7 @@ import { defineStorage } from "@aws-amplify/backend";
 export const storage = defineStorage({
   name: "documents",
   triggers: {
-    onUpload: import("./on-upload-handler").then((m) => m.handler),
+    onUpload: require("./on-upload-handler").handler,
   },
   access: (allow) => ({
     // Only authenticated users can write, everyone can read
