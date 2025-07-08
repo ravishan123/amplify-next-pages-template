@@ -37,6 +37,9 @@ devDependencies:
   '@aws-amplify/backend-cli':
     specifier: ^1.8.0
     version: 1.8.0(@aws-cdk/cli-plugin-contract@2.181.0)(@aws-sdk/types@3.840.0)(@types/node@24.0.10)(aws-cdk-lib@2.203.1)(constructs@10.4.2)(react-dom@19.1.0)(react@19.1.0)(typescript@5.8.3)
+  '@types/aws-lambda':
+    specifier: ^8.10.150
+    version: 8.10.150
   '@types/node':
     specifier: ^24
     version: 24.0.10
