@@ -26,5 +26,5 @@ export const handler: Handler = async (event: S3Event) => {
       })
     );
   }
-  return { status: "done ok" };
+  return { status: "done " };
 };
