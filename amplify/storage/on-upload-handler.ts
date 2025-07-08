@@ -3,8 +3,8 @@ import type { S3Event, Handler } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const REGION = process.env.AWS_REGION || "ap-southeast-1";
-const TABLE_NAME = process.env.DOCUMENT_TABLE_NAME || "Document-S3-POC-Amigo"; // Update if your table name is different
+const REGION = process.env.AWS_REGION || "us-east-1";
+const TABLE_NAME = process.env.DOCUMENT_TABLE_NAME || "Document"; // Update if your table name is different
 
 const ddbClient = new DynamoDBClient({ region: REGION });
 const docClient = DynamoDBDocumentClient.from(ddbClient);
