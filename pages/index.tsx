@@ -45,13 +45,8 @@ export default function App() {
 
   return (
     <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
+      <h1>PORT-81 S3 trigger POC</h1>
+     
       <form onSubmit={handleFileUpload} style={{ marginTop: 24 }}>
         <h2>Upload a file</h2>
         <input
